@@ -1,0 +1,22 @@
+{
+    "name": "iikiti/mfa",
+    "description": "Two-factor/multi-factor authentication bundle for Symfony and iikiti.",
+    "type": "symfony-bundle",
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "iikiti\\mfa\\": "src/",
+			"iikiti\\mfa\\Tests": "tests/"
+        }
+    },
+    "require-dev": {
+        "vimeo/psalm": "^5.18",
+        "phpunit/phpunit": "^10.5",
+        "squizlabs/php_codesniffer": "^3.8",
+        "friendsofphp/php-cs-fixer": "*"
+    },
+    "require": {
+		"php": "~8.2.0 || ~8.3.0",
+        "symfony/security-bundle": "^7.0"
+    }
+}
