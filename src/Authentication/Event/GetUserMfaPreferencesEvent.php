@@ -9,6 +9,8 @@ class GetUserMfaPreferencesEvent extends Event
 {
 	public const NAME = 'user.mfa.prefs';
 
+	public array $prefs = [];
+
 	public function __construct(protected UserInterface $user)
 	{
 	}
@@ -16,5 +18,15 @@ class GetUserMfaPreferencesEvent extends Event
 	public function getUser(): UserInterface
 	{
 		return $this->user;
+	}
+
+	public function getUserPrefs(): array
+	{
+		return $this->prefs;
+	}
+
+	public function setUserPrefs(array $prefs): void
+	{
+		$this->prefs = $prefs;
 	}
 }

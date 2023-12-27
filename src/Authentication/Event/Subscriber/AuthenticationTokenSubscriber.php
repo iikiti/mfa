@@ -39,11 +39,9 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new AuthenticationException('User is invalid');
 		}
 
-		$prefs = $this->dispatcher->dispatch(new GetUserMfaPreferencesEvent($user));
-
-		// TODO: Continue checking MFA properties and create MFA token
-		if (!$mfaProperty->type) {
-		}
+		$userPrefEvent = new GetUserMfaPreferencesEvent($user);
+		$this->dispatcher->dispatch($userPrefEvent);
+		$prefs = $userPrefEvent->getUserPrefs();
 
 		if (
 			$token instanceof TokenInterface
@@ -57,12 +55,6 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$event->setAuthenticatedToken($mfaToken);
 	}
 
-	protected static function __unserializeClassAlias(string $classname): void
-	{
-		// TODO: Make this more strict
-		class_alias(MFProp::class, $classname);
-	}
-
 	// TODO: This is temporary until I can add the event listener to the main application.
 	public function getUserMfaPreferences(GetUserMfaPreferencesEvent $event): void
 	{
@@ -74,14 +66,8 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			return; // User does not have MFA preferences
 		}
 
-		spl_autoload_register(
-			$unserializeLoadHandler = static function (string $classname): void {
-				self::__unserializeClassAlias($classname);
-			}
-		);
 		/** @var MFProp|\__PHP_Incomplete_Class|false $mfaProperty */
 		$mfaProperty = unserialize($user->getProperties()->get(MFProp::KEY)->getValue());
-		spl_autoload_unregister($unserializeLoadHandler);
 
 		if (false === $mfaProperty || false == ($mfaProperty instanceof MFProp)) {
 			throw new AuthenticationException('User has invalid or missing MFA preferences');
