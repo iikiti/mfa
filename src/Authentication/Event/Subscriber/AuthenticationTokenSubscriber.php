@@ -8,9 +8,8 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
  */
 
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
-use iikiti\MfaBundle\Authentication\Event\GetUserMfaPreferencesEvent;
 use iikiti\MfaBundle\Authentication\TokenInterface;
-use iikiti\MfaBundle\Authentication\User\Property as MFProp;
+use iikiti\MfaBundle\Entity\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -26,7 +25,6 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	{
 		return [
 			AuthenticationTokenCreatedEvent::class => 'onGeneralTokenCreated',
-			GetUserMfaPreferencesEvent::class => 'getUserMfaPreferences',
 		];
 	}
 
@@ -35,13 +33,11 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$token = $event->getAuthenticatedToken();
 		$user = $token->getUser();
 
-		if (null === $user) {
+		if (null === $user || false == ($user instanceof UserInterface)) {
 			throw new AuthenticationException('User is invalid');
 		}
 
-		$userPrefEvent = new GetUserMfaPreferencesEvent($user);
-		$this->dispatcher->dispatch($userPrefEvent);
-		$prefs = $userPrefEvent->getUserPrefs();
+		$prefs = $user->getMultifactorPreferences();
 
 		if (
 			$token instanceof TokenInterface
@@ -53,24 +49,5 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$mfaToken->setAssociatedToken($token);
 
 		$event->setAuthenticatedToken($mfaToken);
-	}
-
-	// TODO: This is temporary until I can add the event listener to the main application.
-	public function getUserMfaPreferences(GetUserMfaPreferencesEvent $event): void
-	{
-		$user = $event->getUser();
-
-		// IF user is not an iikiti user, return null
-
-		if (false == $user->getProperties()->containsKey(MFProp::KEY)) {
-			return; // User does not have MFA preferences
-		}
-
-		/** @var MFProp|\__PHP_Incomplete_Class|false $mfaProperty */
-		$mfaProperty = unserialize($user->getProperties()->get(MFProp::KEY)->getValue());
-
-		if (false === $mfaProperty || false == ($mfaProperty instanceof MFProp)) {
-			throw new AuthenticationException('User has invalid or missing MFA preferences');
-		}
 	}
 }
