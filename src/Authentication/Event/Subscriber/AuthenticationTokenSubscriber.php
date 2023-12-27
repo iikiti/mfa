@@ -11,14 +11,14 @@ use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use iikiti\MfaBundle\Authentication\Event\GetUserMfaPreferencesEvent;
 use iikiti\MfaBundle\Authentication\TokenInterface;
 use iikiti\MfaBundle\Authentication\User\Property as MFProp;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 
 class AuthenticationTokenSubscriber implements EventSubscriberInterface
 {
-	public function __construct(private EventDispatcher $dispatcher)
+	public function __construct(private EventDispatcherInterface $dispatcher)
 	{
 	}
 
