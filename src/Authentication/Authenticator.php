@@ -1,8 +1,7 @@
 <?php
 
-namespace iikiti\mfa\Authentication\MultiFactor;
+namespace iikiti\mfa\Authentication;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +22,6 @@ class Authenticator extends AbstractAuthenticator
 {
 	public function __construct(
 		private Security $s,
-		private EntityManagerInterface $em,
 		private UserProviderInterface $userProvider,
 		private ParameterBagInterface $parameterBag,
 		private array $options = []

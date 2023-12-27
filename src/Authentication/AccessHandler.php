@@ -1,6 +1,6 @@
 <?php
 
-namespace iikiti\mfa\Authentication\MultiFactor;
+namespace iikiti\mfa\Authentication;
 
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
