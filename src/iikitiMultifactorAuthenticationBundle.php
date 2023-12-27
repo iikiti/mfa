@@ -4,6 +4,6 @@ namespace iikiti\MfaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class iikitiMultiFactorAuthenticationBundle extends AbstractBundle
+class iikitiMultifactorAuthenticationBundle extends AbstractBundle
 {
 }
