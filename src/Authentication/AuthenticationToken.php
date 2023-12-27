@@ -1,6 +1,6 @@
 <?php
 
-namespace iikiti\mfa\Authentication;
+namespace iikiti\MfaBundle\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

@@ -1,15 +1,15 @@
 <?php
 
-namespace iikiti\mfa\Authentication\Event\Subscriber;
+namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
 
 /*
  * TODO: This requires iikiti user object. Should alter to use base user
  * with ability to use a custom Closure.
  */
 
-use iikiti\mfa\Authentication\AuthenticationToken;
-use iikiti\mfa\Authentication\TokenInterface;
-use iikiti\mfa\Authentication\User\Property as MFProp;
+use iikiti\MfaBundle\Authentication\AuthenticationToken;
+use iikiti\MfaBundle\Authentication\TokenInterface;
+use iikiti\MfaBundle\Authentication\User\Property as MFProp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
