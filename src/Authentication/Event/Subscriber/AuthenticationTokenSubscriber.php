@@ -2,6 +2,10 @@
 
 namespace iikiti\mfa\Authentication\Event\Subscriber;
 
+/*
+ * TODO: This requires iikiti user object. Should alter to use base user
+ * with ability to use a custom Closure.
+ */
 use iikiti\CMS\Entity\Object\User;
 use iikiti\mfa\Authentication\AuthenticationToken;
 use iikiti\mfa\Authentication\TokenInterface;
