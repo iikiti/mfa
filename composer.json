@@ -20,5 +20,8 @@
         "symfony/security-bundle": "^7.0",
         "symfony/routing": "^7.0",
         "symfony/http-kernel": "^7.0"
+    },
+	"suggest": {
+        "ext-sodium": "Base32 encoding at higher performance."
     }
 }
