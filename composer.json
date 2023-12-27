@@ -6,7 +6,7 @@
     "autoload": {
         "psr-4": {
             "iikiti\\mfa\\": "src/",
-			"iikiti\\mfa\\Tests": "tests/"
+			"iikiti\\mfa\\Tests\\": "tests/"
         }
     },
     "require-dev": {
