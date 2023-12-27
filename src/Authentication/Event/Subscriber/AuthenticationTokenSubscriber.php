@@ -6,7 +6,7 @@ namespace iikiti\mfa\Authentication\Event\Subscriber;
  * TODO: This requires iikiti user object. Should alter to use base user
  * with ability to use a custom Closure.
  */
-use iikiti\CMS\Entity\Object\User;
+
 use iikiti\mfa\Authentication\AuthenticationToken;
 use iikiti\mfa\Authentication\TokenInterface;
 use iikiti\mfa\Authentication\User\Property as MFProp;
@@ -26,9 +26,6 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	public static function onGeneralTokenCreated(AuthenticationTokenCreatedEvent $event): void
 	{
 		$token = $event->getAuthenticatedToken();
-
-		// TODO: Check user for multi-factor login requirement.
-		/** @var User|null $user */
 		$user = $token->getUser();
 
 		if (null === $user) {
