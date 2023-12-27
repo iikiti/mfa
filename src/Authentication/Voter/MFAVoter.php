@@ -1,9 +1,9 @@
 <?php
 
-namespace iikiti\mfa\Authentication\MultiFactor\Voter;
+namespace iikiti\mfa\Authentication\Voter;
 
 use Doctrine\ORM\EntityManagerInterface;
-use iikiti\mfa\Authentication\MultiFactor\AuthenticationToken;
+use iikiti\mfa\Authentication\AuthenticationToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

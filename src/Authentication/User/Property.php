@@ -1,6 +1,6 @@
 <?php
 
-namespace iikiti\mfa\Authentication\MultiFactor\User;
+namespace iikiti\mfa\Authentication\User;
 
 class Property
 {

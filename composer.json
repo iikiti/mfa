@@ -17,6 +17,7 @@
     },
     "require": {
 		"php": "~8.2.0 || ~8.3.0",
-        "symfony/security-bundle": "^7.0"
+        "symfony/security-bundle": "^7.0",
+        "symfony/routing": "^7.0"
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace iikiti\mfa\Authentication\MultiFactor\Event\Subscriber;
+namespace iikiti\mfa\Authentication\Event\Subscriber;
 
 use iikiti\CMS\Entity\Object\User;
-use iikiti\mfa\Authentication\MultiFactor\AuthenticationToken;
-use iikiti\mfa\Authentication\MultiFactor\TokenInterface;
-use iikiti\mfa\Authentication\MultiFactor\User\Property as MFProp;
+use iikiti\mfa\Authentication\AuthenticationToken;
+use iikiti\mfa\Authentication\TokenInterface;
+use iikiti\mfa\Authentication\User\Property as MFProp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
