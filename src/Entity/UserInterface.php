@@ -6,5 +6,5 @@ interface UserInterface
 {
 	public const MFA_KEY = 'mfa';
 
-	public function getMultifactorPreferences(): array;
+	public function getMultifactorPreferences(): array|null;
 }

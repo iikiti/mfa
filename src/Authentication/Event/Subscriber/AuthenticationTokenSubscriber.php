@@ -37,7 +37,12 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new AuthenticationException('User is invalid');
 		}
 
+		/** @var UserInterface $user */
 		$prefs = $user->getMultifactorPreferences();
+
+		if (null === $prefs) {
+			throw new AuthenticationException('User has invalid or missing MFA preferences');
+		}
 
 		if (
 			$token instanceof TokenInterface
