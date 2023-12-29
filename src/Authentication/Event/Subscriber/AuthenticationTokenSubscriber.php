@@ -8,10 +8,10 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
  */
 
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
-use iikiti\MfaBundle\Authentication\TokenInterface;
 use iikiti\MfaBundle\Entity\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 
@@ -44,6 +44,13 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new AuthenticationException('User has invalid or missing MFA preferences');
 		}
 
+		$authData = $prefs['~'.($prefs['type'] ?? '')] ?? false;
+		if ($prefs['type'] ?? '' == '' || false == is_array($authData) || empty($authData)) {
+			throw new AuthenticationException('Invalid authentication data.');
+		}
+
+		$this->_checkAuthData($authData);
+
 		if (
 			$token instanceof TokenInterface
 		) {
@@ -54,5 +61,9 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$mfaToken->setAssociatedToken($token);
 
 		$event->setAuthenticatedToken($mfaToken);
+	}
+
+	private function _checkAuthData(array $authData): void
+	{
 	}
 }
