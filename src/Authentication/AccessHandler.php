@@ -2,6 +2,7 @@
 
 namespace iikiti\MfaBundle\Authentication;
 
+use iikiti\MfaBundle\Authentication\Exception\AccessDeniedException as iikitiAccessDeniedException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class AccessHandler implements AccessDeniedHandlerInterface
 				false == ($session instanceof FlashBagAwareSessionInterface)
 			) {
 				if (false == ($accessDeniedException instanceof AccessDeniedException)) {
-					throw new AccessDeniedException($message, $accessDeniedException);
+					throw new iikitiAccessDeniedException($message, $accessDeniedException);
 				}
 			} else {
 				$session->getFlashBag()->set('error', $message);
