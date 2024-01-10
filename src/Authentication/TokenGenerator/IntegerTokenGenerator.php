@@ -4,16 +4,18 @@ namespace iikiti\MfaBundle\Authentication\TokenGenerator;
 
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 class IntegerTokenGenerator extends AbstractSimpleTokenGenerator
 {
-	protected OptionsResolver $optionsResolver;
-
 	public function __construct()
 	{
-		$this->optionsResolver = self::_generateOptionsResolver();
+		parent::__construct();
 	}
 
 	public function generate(array $options = []): int
@@ -50,5 +52,29 @@ class IntegerTokenGenerator extends AbstractSimpleTokenGenerator
 		);
 
 		return $resolver;
+	}
+
+	public function validate(int|string $requestToken, int|string $storedToken): ConstraintViolationListInterface
+	{
+		$validator = Validation::createValidator();
+		$intConstraint = new Type('int', 'The token must be an integer.');
+		$tokenValidConstraint = new IsTrue(null, 'The token is not valid.');
+
+		$constraints = new Collection(
+			[
+				'requestToken' => $intConstraint,
+				'storedToken' => $intConstraint,
+				'tokenValid' => $tokenValidConstraint,
+			]
+		);
+
+		return $validator->validate(
+			[
+				'requestToken' => $requestToken,
+				'storedToken' => $storedToken,
+				'tokenValid' => password_verify((string) $storedToken, (string) $requestToken),
+			],
+			$constraints
+		);
 	}
 }

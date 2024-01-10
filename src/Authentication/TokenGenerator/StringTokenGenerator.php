@@ -4,16 +4,16 @@ namespace iikiti\MfaBundle\Authentication\TokenGenerator;
 
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 class StringTokenGenerator extends AbstractSimpleTokenGenerator
 {
-	protected OptionsResolver $optionsResolver;
-
 	public function __construct()
 	{
-		$this->optionsResolver = self::_generateOptionsResolver();
+		parent::__construct();
 	}
 
 	public function generate(array $options = []): string
@@ -50,5 +50,16 @@ class StringTokenGenerator extends AbstractSimpleTokenGenerator
 		);
 
 		return $resolver;
+	}
+
+	public function validate(string|int $requestToken, string|int $storedToken): ConstraintViolationListInterface
+	{
+		$validator = Validation::createValidator();
+		$tokenValidConstraint = new IsTrue(null, 'The token is not valid.');
+
+		return $validator->validate(
+			password_verify((string) $storedToken, (string) $requestToken),
+			$tokenValidConstraint
+		);
 	}
 }
