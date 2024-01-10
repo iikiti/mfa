@@ -2,7 +2,7 @@
 
 namespace iikiti\MfaBundle\Authentication\Interface;
 
-interface AuthenticationMethod
+interface AuthenticationStrategy
 {
 	public function generateChallenge(): void;
 
