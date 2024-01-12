@@ -2,9 +2,7 @@
 
 namespace iikiti\MfaBundle\Authentication\Strategy;
 
-use iikiti\MfaBundle\Authentication\Interface\AuthenticationStrategy;
-
-class EmailTokenStrategy implements AuthenticationStrategy
+class EmailTokenStrategy extends AbstractTokenStrategy
 {
 	public function generateChallenge(): void
 	{
