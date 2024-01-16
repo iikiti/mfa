@@ -9,5 +9,7 @@ interface AuthenticationStrategy
 {
 	public function generateChallenge(): void;
 
+	public function issueChallenge(): void;
+
 	public function validateChallenge(): void;
 }

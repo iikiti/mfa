@@ -8,6 +8,10 @@ class EmailTokenStrategy extends AbstractTokenStrategy
 	{
 	}
 
+	public function issueChallenge(): void
+	{
+	}
+
 	public function validateChallenge(): void
 	{
 	}
