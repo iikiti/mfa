@@ -58,7 +58,7 @@ class Authenticator extends AbstractAuthenticator
 			[new RememberMeBadge()]
 		);
 
-		if ($this->parameterBag->get('form.type_extension.csrf.enabled') ?? false) {
+		if (true == ($this->parameterBag->get('form.type_extension.csrf.enabled') ?? false)) {
 			$passport->addBadge(
 				new CsrfTokenBadge(
 					'mfa',

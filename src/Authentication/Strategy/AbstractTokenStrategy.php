@@ -2,8 +2,8 @@
 
 namespace iikiti\MfaBundle\Authentication\Strategy;
 
-use iikiti\MfaBundle\Authentication\Interface\AuthenticationStrategy;
+use iikiti\MfaBundle\Authentication\Interface\AuthenticationStrategyInterface;
 
-abstract class AbstractTokenStrategy implements AuthenticationStrategy
+abstract class AbstractTokenStrategy implements AuthenticationStrategyInterface
 {
 }

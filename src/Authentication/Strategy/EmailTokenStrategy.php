@@ -4,7 +4,7 @@ namespace iikiti\MfaBundle\Authentication\Strategy;
 
 class EmailTokenStrategy extends AbstractTokenStrategy
 {
-	public function generateChallenge(): void
+	public function generateChallenge(): string
 	{
 	}
 
@@ -12,7 +12,11 @@ class EmailTokenStrategy extends AbstractTokenStrategy
 	{
 	}
 
-	public function validateChallenge(): void
+	public function validateChallenge(): bool
+	{
+	}
+
+	public function generateSecret(): null
 	{
 	}
 }
