@@ -45,7 +45,7 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		}
 
 		$authData = $prefs['~'.($prefs['type'] ?? '')] ?? false;
-		if ($prefs['type'] ?? '' == '' || false == is_array($authData) || empty($authData)) {
+		if (($prefs['type'] ?? '') == '' || [] === $authData) {
 			throw new AuthenticationException('Invalid authentication data.');
 		}
 
