@@ -4,20 +4,18 @@ namespace iikiti\MfaBundle\Authentication\Strategy;
 
 use iikiti\MfaBundle\Authentication\Challenge;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
-use iikiti\MfaBundle\Authentication\Interface\QrCodeInterface;
 use OTPHP\HOTP;
 use OTPHP\HOTPInterface;
-use OTPHP\OTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * RFC 4226: HOTP: An HMAC-Based One-Time Password Algorithm:
  *     https://datatracker.ietf.org/doc/html/rfc4226
  */
-class HotpTokenStrategy extends AbstractTokenStrategy implements QrCodeInterface
+class HotpTokenStrategy extends AbstractOtpTokenStrategy
 {
 	/**
-	 * @return ChallengeInterface<OTPInterface>
+	 * @return ChallengeInterface<HOTPInterface>
 	 */
 	public function generateChallenge(
 		#[\SensitiveParameter] string $secret

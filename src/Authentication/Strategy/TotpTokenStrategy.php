@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  * RFC 6238: Time-Based One-Time Password Algorithm (TOTP):
  *     https://datatracker.ietf.org/doc/html/rfc6238
  */
-class TotpTokenStrategy extends HotpTokenStrategy
+class TotpTokenStrategy extends AbstractOtpTokenStrategy
 {
 	/**
 	 * @return ChallengeInterface<TOTPInterface>
