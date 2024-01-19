@@ -4,8 +4,8 @@ namespace iikiti\MfaBundle\Authentication\Strategy;
 
 use iikiti\MfaBundle\Authentication\Challenge;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
-use OTPHP\OTPInterface;
 use OTPHP\TOTP;
+use OTPHP\TOTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -15,12 +15,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class TotpTokenStrategy extends HotpTokenStrategy
 {
 	/**
-	 * @return ChallengeInterface<OTPInterface>
+	 * @return ChallengeInterface<TOTPInterface>
 	 */
 	public function generateChallenge(
-		#[\SensitiveParameter] string $secret = null
+		#[\SensitiveParameter] string $secret
 	): ChallengeInterface {
-		if (null === $secret || empty($secret)) {
+		if (empty($secret)) {
 			throw new AuthenticationException('Invalid secret.');
 		}
 
@@ -28,19 +28,39 @@ class TotpTokenStrategy extends HotpTokenStrategy
 	}
 
 	/**
-	 * @param ChallengeInterface<OTPInterface>|null $challenge
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 *
+	 * @param ChallengeInterface<TOTPInterface> $challenge
 	 */
 	public function issueChallenge(
-		ChallengeInterface $challenge = null
+		ChallengeInterface $challenge
 	): void {
 	}
 
 	/**
-	 * @param ChallengeInterface<OTPInterface>|null $challenge
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 *
+	 * @param ChallengeInterface<TOTPInterface> $challenge
+	 *
+	 * @return array<int,\Exception>
 	 */
 	public function validateChallenge(
-		ChallengeInterface $challenge = null
-	): bool {
+		ChallengeInterface $challenge,
+		#[\SensitiveParameter] string $userInput
+	): array {
+		$errors = [];
+
+		if (empty($userInput)) {
+			$errors[] = new AuthenticationException('Invalid challenge or secret.');
+
+			return $errors;
+		}
+
+		if (false == $challenge->get()->verify($userInput)) {
+			$errors[] = new AuthenticationException('Challenge is incorrect.');
+		}
+
+		return $errors;
 	}
 
 	public function generateSecret(): string

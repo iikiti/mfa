@@ -6,6 +6,7 @@ use iikiti\MfaBundle\Authentication\Challenge;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
 use iikiti\MfaBundle\Authentication\Interface\QrCodeInterface;
 use OTPHP\HOTP;
+use OTPHP\HOTPInterface;
 use OTPHP\OTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -19,9 +20,9 @@ class HotpTokenStrategy extends AbstractTokenStrategy implements QrCodeInterface
 	 * @return ChallengeInterface<OTPInterface>
 	 */
 	public function generateChallenge(
-		#[\SensitiveParameter] string $secret = null
+		#[\SensitiveParameter] string $secret
 	): ChallengeInterface {
-		if (null === $secret || empty($secret)) {
+		if (empty($secret)) {
 			throw new AuthenticationException('Invalid secret.');
 		}
 
@@ -31,21 +32,37 @@ class HotpTokenStrategy extends AbstractTokenStrategy implements QrCodeInterface
 	/**
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 *
-	 * @param ChallengeInterface<OTPInterface>|null $challenge
+	 * @param ChallengeInterface<HOTPInterface> $challenge
 	 */
 	public function issueChallenge(
-		ChallengeInterface $challenge = null
+		ChallengeInterface $challenge
 	): void {
 	}
 
 	/**
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 *
-	 * @param ChallengeInterface<OTPInterface>|null $challenge
+	 * @param ChallengeInterface<HOTPInterface> $challenge
+	 *
+	 * @return array<int,\Exception>
 	 */
 	public function validateChallenge(
-		ChallengeInterface $challenge = null
-	): bool {
+		ChallengeInterface $challenge,
+		#[\SensitiveParameter] string $userInput
+	): array {
+		$errors = [];
+
+		if (empty($userInput)) {
+			$errors[] = new AuthenticationException('Invalid challenge or secret.');
+
+			return $errors;
+		}
+
+		if (false == $challenge->get()->verify($userInput)) {
+			$errors[] = new AuthenticationException('Challenge is incorrect.');
+		}
+
+		return $errors;
 	}
 
 	public function generateSecret(): string

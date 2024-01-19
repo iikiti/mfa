@@ -11,16 +11,20 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 interface AuthenticationStrategyInterface
 {
 	public function generateChallenge(
-		#[\SensitiveParameter] string $secret = null
+		#[\SensitiveParameter] string $secret
 	): ChallengeInterface;
 
 	public function issueChallenge(
-		ChallengeInterface $challenge = null
+		ChallengeInterface $challenge
 	): void;
 
+	/**
+	 * @return array<int,\Exception>
+	 */
 	public function validateChallenge(
-		ChallengeInterface $challenge = null
-	): bool;
+		ChallengeInterface $challenge,
+		#[\SensitiveParameter] string $userInput
+	): array;
 
 	public function generateSecret(): null|string;
 }
