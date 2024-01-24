@@ -22,7 +22,8 @@
         "symfony/http-kernel": "^7.0",
         "symfony/validator": "^7.0",
         "symfony/options-resolver": "^7.0",
-        "spomky-labs/otphp": "^11.2"
+        "spomky-labs/otphp": "^11.2",
+        "doctrine/persistence": "^3.2"
     },
 	"suggest": {
         "ext-sodium": "Base32 encoding at higher performance."
