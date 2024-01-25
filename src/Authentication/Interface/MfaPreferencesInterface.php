@@ -1,8 +1,8 @@
 <?php
 
-namespace iikiti\MfaBundle\Entity;
+namespace iikiti\MfaBundle\Authentication\Interface;
 
-interface UserInterface
+interface MfaPreferencesInterface
 {
 	public const MFA_KEY = 'mfa';
 

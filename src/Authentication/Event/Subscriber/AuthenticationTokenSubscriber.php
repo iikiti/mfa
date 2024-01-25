@@ -8,7 +8,7 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
  */
 
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
-use iikiti\MfaBundle\Entity\UserInterface;
+use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -28,16 +28,21 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		];
 	}
 
-	public function onGeneralTokenCreated(AuthenticationTokenCreatedEvent $event): void
-	{
+	public function onGeneralTokenCreated(
+		AuthenticationTokenCreatedEvent $event
+	): void {
 		$token = $event->getAuthenticatedToken();
 		$user = $token->getUser();
 
-		if (null === $user || false == ($user instanceof UserInterface)) {
+		// if (null === $site || false == ($site instanceof MfaPreferencesInterface)) {
+		//	throw new AuthenticationException('Site is invalid');
+		// }
+
+		if (null === $user || false == ($user instanceof MfaPreferencesInterface)) {
 			throw new AuthenticationException('User is invalid');
 		}
 
-		/** @var UserInterface $user */
+		/** @var MfaPreferencesInterface $user */
 		$prefs = $user->getMultifactorPreferences();
 
 		if (null === $prefs || [] === $prefs) {
