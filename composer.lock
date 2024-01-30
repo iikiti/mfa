@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fddb3f639da9b62eb4ff22d2314a441c",
+    "content-hash": "e9b3bc89efc2dd6c8fbe5ef7cb03f3ae",
     "packages": [
         {
             "name": "doctrine/event-manager",
@@ -4725,6 +4725,53 @@
                 }
             ],
             "time": "2024-01-22T14:35:40+00:00"
+        },
+        {
+            "name": "psalm/attributes",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/psalm-attributes.git",
+                "reference": "c796c2da0841a97dac3b7a1f8a5d6fe3f866b6ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/psalm-attributes/zipball/c796c2da0841a97dac3b7a1f8a5d6fe3f866b6ca",
+                "reference": "c796c2da0841a97dac3b7a1f8a5d6fe3f866b6ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8"
+            },
+            "require-dev": {
+                "vimeo/psalm": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psalm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthew Brown"
+                }
+            ],
+            "description": "A collection of PHP 8 Attributes that Psalm can understand",
+            "keywords": [
+                "attributes",
+                "php",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/psalm/psalm-attributes/issues",
+                "source": "https://github.com/psalm/psalm-attributes/tree/0.1.0"
+            },
+            "time": "2020-10-31T02:02:00+00:00"
         },
         {
             "name": "psalm/plugin-symfony",
