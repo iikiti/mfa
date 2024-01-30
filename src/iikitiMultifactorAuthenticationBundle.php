@@ -4,6 +4,7 @@ namespace iikiti\MfaBundle;
 
 use Doctrine\Persistence\ObjectRepository;
 use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -16,7 +17,11 @@ class iikitiMultifactorAuthenticationBundle extends AbstractBundle
 	public function configure(DefinitionConfigurator $definition): void
 	{
 		parent::configure($definition);
-		$definition->rootNode()->
+		$rootNode = $definition->rootNode();
+		if (false === $rootNode instanceof ArrayNodeDefinition) {
+			throw new \RuntimeException('Invalid root node type.');
+		}
+		$rootNode->
 			children()->
 				scalarNode('site_repository')->
 					isRequired()->
@@ -45,9 +50,7 @@ class iikitiMultifactorAuthenticationBundle extends AbstractBundle
 								'implements '.ObjectRepository::class.' and '.
 								MfaPreferencesInterface::class.'.'
 							)->
-					end()->
-				end()->
-			end();
+					end();
 	}
 
 	public function loadExtension(
