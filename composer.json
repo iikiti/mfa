@@ -5,8 +5,12 @@
     "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
-            "iikiti\\MfaBundle\\": "src/",
-			"iikiti\\MfaBundle\\Tests\\": "tests/"
+            "iikiti\\MfaBundle\\": "src/"
+        }
+    },
+	"autoload-dev": {
+        "psr-4": {
+            "iikiti\\MfaBundle\\Tests\\": "tests/"
         }
     },
     "require-dev": {
