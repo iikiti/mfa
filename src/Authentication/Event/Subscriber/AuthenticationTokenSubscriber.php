@@ -7,8 +7,11 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
  * with ability to use a custom Closure.
  */
 
+use Doctrine\ORM\EntityManager;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
+use iikiti\MfaBundle\iikitiMultifactorAuthenticationBundle as Bundle;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -17,8 +20,10 @@ use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 
 class AuthenticationTokenSubscriber implements EventSubscriberInterface
 {
-	public function __construct(private EventDispatcherInterface $dispatcher)
-	{
+	public function __construct(
+		private EventDispatcherInterface $dispatcher,
+		private ContainerBagInterface $params,
+	) {
 	}
 
 	public static function getSubscribedEvents(): array
@@ -29,13 +34,16 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	}
 
 	public function onGeneralTokenCreated(
-		AuthenticationTokenCreatedEvent $event
+		AuthenticationTokenCreatedEvent $event,
 	): void {
 		$token = $event->getAuthenticatedToken();
 		$user = $token->getUser();
 
-		// if (null === $site || false == ($site instanceof MfaPreferencesInterface)) {
-		//	throw new AuthenticationException('Site is invalid');
+		// dump($this->em->getRepository());
+		// dump($this->container->get($this->params->get(Bundle::SITE_REPOSITORY_KEY)));
+		// dump($this->entityManager->getRepository($this->params->get(Bundle::SITE_REPOSITORY_KEY)));
+		// if (null === $this->siteRepository) {
+		//	throw new AuthenticationException('Site repository is invalid');
 		// }
 
 		if (null === $user || false == ($user instanceof MfaPreferencesInterface)) {
