@@ -7,7 +7,7 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
  * with ability to use a custom Closure.
  */
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
 use iikiti\MfaBundle\iikitiMultifactorAuthenticationBundle as Bundle;
@@ -23,6 +23,7 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	public function __construct(
 		private EventDispatcherInterface $dispatcher,
 		private ContainerBagInterface $params,
+		private EntityManagerInterface $entityManager
 	) {
 	}
 
@@ -39,30 +40,29 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$token = $event->getAuthenticatedToken();
 		$user = $token->getUser();
 
-		// dump($this->em->getRepository());
-		// dump($this->container->get($this->params->get(Bundle::SITE_REPOSITORY_KEY)));
-		// dump($this->entityManager->getRepository($this->params->get(Bundle::SITE_REPOSITORY_KEY)));
-		// if (null === $this->siteRepository) {
-		//	throw new AuthenticationException('Site repository is invalid');
-		// }
-
-		if (null === $user || false == ($user instanceof MfaPreferencesInterface)) {
+		/** @var class-string $repositoryClass */
+		$repositoryClass = $this->params->get(Bundle::SITE_ENTITY_KEY);
+		$siteRepository = $this->entityManager->getRepository($repositoryClass);
+		if (!($siteRepository instanceof MfaPreferencesInterface)) {
+			throw new \Exception('Repository class must implement '.MfaPreferencesInterface::class);
+		}
+		if (null === $user) {
 			throw new AuthenticationException('User is invalid');
+		} elseif (!($user instanceof MfaPreferencesInterface)) {
+			throw new \Exception('User class must implement '.MfaPreferencesInterface::class);
 		}
 
-		/** @var MfaPreferencesInterface $user */
-		$prefs = $user->getMultifactorPreferences();
+		$sitePrefs = $siteRepository->getMultifactorPreferences();
+		$userPrefs = $user->getMultifactorPreferences();
 
-		if (null === $prefs || [] === $prefs) {
-			throw new AuthenticationException('User has invalid or missing MFA preferences');
+		if (
+			(!is_array($sitePrefs) || [] === $sitePrefs) ||
+			(!is_array($userPrefs) || [] === $userPrefs)
+		) {
+			return; // Preferences not set
 		}
 
-		$authData = $prefs['~'.($prefs['type'] ?? '')] ?? false;
-		if (($prefs['type'] ?? '') == '' || [] === $authData) {
-			throw new AuthenticationException('Invalid authentication data.');
-		}
-
-		$this->_checkAuthData($authData);
+		// $this->_checkAuthData($authData);
 
 		if (
 			$token instanceof TokenInterface
