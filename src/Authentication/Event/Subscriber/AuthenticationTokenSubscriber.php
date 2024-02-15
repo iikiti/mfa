@@ -2,18 +2,15 @@
 
 namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
 
-/*
- * TODO: This requires iikiti user object. Should alter to use base user
- * with ability to use a custom Closure.
- */
-
 use Doctrine\ORM\EntityManagerInterface;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
+use iikiti\MfaBundle\Authentication\Interface\ApplicationSubordinateInterface;
 use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
 use iikiti\MfaBundle\iikitiMultifactorAuthenticationBundle as Bundle;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
@@ -43,8 +40,13 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		/** @var class-string $repositoryClass */
 		$repositoryClass = $this->params->get(Bundle::SITE_ENTITY_KEY);
 		$siteRepository = $this->entityManager->getRepository($repositoryClass);
-		if (!($siteRepository instanceof MfaPreferencesInterface)) {
-			throw new \Exception('Repository class must implement '.MfaPreferencesInterface::class);
+		if (
+			!(
+				$siteRepository instanceof MfaPreferencesInterface ||
+				$siteRepository instanceof ApplicationSubordinateInterface
+			)
+		) {
+			throw new \Exception('Repository class must implement '.MfaPreferencesInterface::class.' and '.ApplicationSubordinateInterface::class);
 		}
 		if (null === $user) {
 			throw new AuthenticationException('User is invalid');
@@ -52,17 +54,14 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new \Exception('User class must implement '.MfaPreferencesInterface::class);
 		}
 
-		$sitePrefs = $siteRepository->getMultifactorPreferences();
-		$userPrefs = $user->getMultifactorPreferences();
+		$appPrefs = $siteRepository->getApplicationRepository()->getMultifactorPreferences() ?? [];
+		$sitePrefs = $siteRepository->getMultifactorPreferences() ?? [];
+		$userPrefs = $user->getMultifactorPreferences() ?? [];
 
-		if (
-			(!is_array($sitePrefs) || [] === $sitePrefs) ||
-			(!is_array($userPrefs) || [] === $userPrefs)
-		) {
-			return; // Preferences not set
+		if (false == $this->__checkPreferences($appPrefs, $sitePrefs, $userPrefs)) {
+			return; // Site or user not configured for MFA
 		}
-
-		// $this->_checkAuthData($authData);
+		// $this->__checkAuthData($authData);
 
 		if (
 			$token instanceof TokenInterface
@@ -76,7 +75,14 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$event->setAuthenticatedToken($mfaToken);
 	}
 
-	private function _checkAuthData(array $authData): void
+	private function __checkPreferences(array $application, array $site, array $user): bool
+	{
+		$accessor = PropertyAccess::createPropertyAccessor();
+
+		return false;
+	}
+
+	private function __checkAuthData(array $authData): void
 	{
 	}
 }
