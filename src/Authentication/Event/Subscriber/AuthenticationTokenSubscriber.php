@@ -2,11 +2,11 @@
 
 namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
-use iikiti\MfaBundle\Authentication\Interface\ApplicationSubordinateInterface;
-use iikiti\MfaBundle\Authentication\Interface\MfaPreferencesInterface;
-use iikiti\MfaBundle\iikitiMultifactorAuthenticationBundle as Bundle;
+use iikiti\MfaBundle\Authentication\Enum\ConfigurationTypeEnum;
+use iikiti\MfaBundle\Authentication\Interface\MfaConfigurationServiceInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,7 +20,8 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	public function __construct(
 		private EventDispatcherInterface $dispatcher,
 		private ContainerBagInterface $params,
-		private EntityManagerInterface $entityManager
+		#[AutowireLocator(['?'.MfaConfigurationServiceInterface::class])]
+		private ContainerInterface $mfaConfigContainer
 	) {
 	}
 
@@ -37,26 +38,23 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$token = $event->getAuthenticatedToken();
 		$user = $token->getUser();
 
-		/** @var class-string $repositoryClass */
-		$repositoryClass = $this->params->get(Bundle::SITE_ENTITY_KEY);
-		$siteRepository = $this->entityManager->getRepository($repositoryClass);
-		if (
-			!(
-				$siteRepository instanceof MfaPreferencesInterface ||
-				$siteRepository instanceof ApplicationSubordinateInterface
-			)
-		) {
-			throw new \Exception('Repository class must implement '.MfaPreferencesInterface::class.' and '.ApplicationSubordinateInterface::class);
-		}
 		if (null === $user) {
 			throw new AuthenticationException('User is invalid');
-		} elseif (!($user instanceof MfaPreferencesInterface)) {
-			throw new \Exception('User class must implement '.MfaPreferencesInterface::class);
 		}
 
-		$appPrefs = $siteRepository->getApplicationRepository()->getMultifactorPreferences() ?? [];
-		$sitePrefs = $siteRepository->getMultifactorPreferences() ?? [];
-		$userPrefs = $user->getMultifactorPreferences() ?? [];
+		if (!$this->mfaConfigContainer->has(MfaConfigurationServiceInterface::class)) {
+			throw new AuthenticationException('Missing service: '.MfaConfigurationServiceInterface::class);
+		}
+		$configService = $this->mfaConfigContainer->get(MfaConfigurationServiceInterface::class);
+		$appPrefs = $configService->getMultifactorPreferences(
+			ConfigurationTypeEnum::APPLICATION
+		);
+		$sitePrefs = $configService->getMultifactorPreferences(
+			ConfigurationTypeEnum::SITE
+		);
+		$userPrefs = $configService->getMultifactorPreferences(
+			ConfigurationTypeEnum::USER
+		);
 
 		if (false == $this->__checkPreferences($appPrefs, $sitePrefs, $userPrefs)) {
 			return; // Site or user not configured for MFA
