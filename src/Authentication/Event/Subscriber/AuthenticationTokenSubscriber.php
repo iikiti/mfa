@@ -5,11 +5,11 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use iikiti\MfaBundle\Authentication\Enum\ConfigurationTypeEnum;
 use iikiti\MfaBundle\Authentication\Interface\MfaConfigurationServiceInterface;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -20,8 +20,9 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	public function __construct(
 		private EventDispatcherInterface $dispatcher,
 		private ContainerBagInterface $params,
-		#[AutowireLocator(['?'.MfaConfigurationServiceInterface::class])]
-		private ContainerInterface $mfaConfigContainer
+		#[TaggedIterator('mfa.config')]
+		private iterable $mfaConfigIterator,
+		private KernelInterface $kernel
 	) {
 	}
 
@@ -42,10 +43,11 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new AuthenticationException('User is invalid');
 		}
 
-		if (!$this->mfaConfigContainer->has(MfaConfigurationServiceInterface::class)) {
-			throw new AuthenticationException('Missing service: '.MfaConfigurationServiceInterface::class);
-		}
-		$configService = $this->mfaConfigContainer->get(MfaConfigurationServiceInterface::class);
+		$configService = $this->__getApplicationConfiguration(
+			$this->mfaConfigIterator,
+			(new \ReflectionClass($this->kernel))->getNamespaceName()
+		);
+
 		$appPrefs = $configService->getMultifactorPreferences(
 			ConfigurationTypeEnum::APPLICATION
 		);
@@ -71,6 +73,27 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$mfaToken->setAssociatedToken($token);
 
 		$event->setAuthenticatedToken($mfaToken);
+	}
+
+	private function __getApplicationConfiguration(
+		iterable $configIterable,
+		string $appNamespace
+	): MfaConfigurationServiceInterface {
+		$total = 0;
+		foreach ($configIterable as $config) {
+			++$total;
+			if (str_starts_with($config::class, $appNamespace)) {
+				return $config;
+			}
+		}
+
+		if ($total > 0) {
+			$message = 'No valid configuration service found. '.
+				'The service must be part of the application, not a bundle.';
+			throw new AuthenticationException($message);
+		} else {
+			throw new AuthenticationException('No configuration service found.');
+		}
 	}
 
 	private function __checkPreferences(array $application, array $site, array $user): bool

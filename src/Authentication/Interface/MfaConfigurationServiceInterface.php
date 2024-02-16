@@ -3,7 +3,9 @@
 namespace iikiti\MfaBundle\Authentication\Interface;
 
 use iikiti\MfaBundle\Authentication\Enum\ConfigurationTypeEnum;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+#[AutoconfigureTag('mfa.config')]
 interface MfaConfigurationServiceInterface
 {
 	public function getMultifactorPreferences(ConfigurationTypeEnum $type): array;
