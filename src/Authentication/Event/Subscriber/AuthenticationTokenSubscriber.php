@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 
 class AuthenticationTokenSubscriber implements EventSubscriberInterface
@@ -43,22 +44,10 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 			throw new AuthenticationException('User is invalid');
 		}
 
-		$configService = $this->__getApplicationConfiguration(
+		list($appPrefs, $sitePrefs, $userPrefs) = self::__getConfigurations(
 			$this->mfaConfigIterator,
+			$user,
 			(new \ReflectionClass($this->kernel))->getNamespaceName()
-		);
-
-		$appPrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::APPLICATION,
-			$user
-		);
-		$sitePrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::SITE,
-			$user
-		);
-		$userPrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::USER,
-			$user
 		);
 
 		if (false == $this->__checkPreferences($appPrefs, $sitePrefs, $userPrefs)) {
@@ -78,7 +67,33 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$event->setAuthenticatedToken($mfaToken);
 	}
 
-	private function __getApplicationConfiguration(
+	private static function __getConfigurations(
+		iterable $mfaConfigIterator,
+		UserInterface $user,
+		string $appNamespace
+	) {
+		$configService = self::__getApplicationConfiguration(
+			$mfaConfigIterator,
+			$appNamespace
+		);
+
+		return [
+			$configService->getMultifactorPreferences(
+				ConfigurationTypeEnum::APPLICATION,
+				$user
+			),
+			$configService->getMultifactorPreferences(
+				ConfigurationTypeEnum::SITE,
+				$user
+			),
+			$configService->getMultifactorPreferences(
+				ConfigurationTypeEnum::USER,
+				$user
+			),
+		];
+	}
+
+	private static function __getApplicationConfiguration(
 		iterable $configIterable,
 		string $appNamespace
 	): MfaConfigurationServiceInterface {
