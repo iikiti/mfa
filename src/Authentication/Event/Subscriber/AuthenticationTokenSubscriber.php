@@ -49,13 +49,16 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		);
 
 		$appPrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::APPLICATION
+			ConfigurationTypeEnum::APPLICATION,
+			$user
 		);
 		$sitePrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::SITE
+			ConfigurationTypeEnum::SITE,
+			$user
 		);
 		$userPrefs = $configService->getMultifactorPreferences(
-			ConfigurationTypeEnum::USER
+			ConfigurationTypeEnum::USER,
+			$user
 		);
 
 		if (false == $this->__checkPreferences($appPrefs, $sitePrefs, $userPrefs)) {
