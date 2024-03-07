@@ -2,7 +2,6 @@
 
 namespace iikiti\MfaBundle\Authentication\Voter;
 
-use Doctrine\ORM\EntityManagerInterface;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +20,7 @@ class MFAVoter extends Voter
 	public const IS_MFA_IN_PROGRESS = 'IS_MFA_IN_PROGRESS';
 
 	public function __construct(
-		private Security $s,
-		private EntityManagerInterface $em
+		private Security $s
 	) {
 	}
 
