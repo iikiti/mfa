@@ -17,7 +17,7 @@ class StringTest extends TestCase
 
 	public function testValidate(): void
 	{
-		$token = $this->stringTokenGenerator->generate(['min' => 5, 'max' => 5]);
-		$this->assertEquals('5', $token);
+		$token = $this->stringTokenGenerator->generate(['min' => 0, 'max' => 9, 'length' => 6]);
+		$this->assertMatchesRegularExpression('/^[0-9]{6,6}$/', $token);
 	}
 }
