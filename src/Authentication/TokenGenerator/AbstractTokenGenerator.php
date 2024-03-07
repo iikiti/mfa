@@ -16,7 +16,7 @@ abstract class AbstractTokenGenerator implements TokenGeneratorInterface
 
 	public function __construct()
 	{
-		$this->optionsResolver = self::_generateOptionsResolver();
+		$this->optionsResolver = static::_generateOptionsResolver();
 	}
 
 	abstract protected static function _generateOptionsResolver(): OptionsResolver;

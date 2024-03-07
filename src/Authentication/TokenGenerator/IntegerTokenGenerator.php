@@ -2,11 +2,10 @@
 
 namespace iikiti\MfaBundle\Authentication\TokenGenerator;
 
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
@@ -37,21 +36,19 @@ class IntegerTokenGenerator extends AbstractSimpleTokenGenerator
 				'max' => 5,
 			]
 		);
-		$resolver->setAllowedTypes('min', 'int');
-		$resolver->setAllowedTypes('max', 'int');
-		$resolver->setAllowedValues(
+		$resolver->addAllowedTypes('min', 'int');
+		$resolver->addAllowedTypes('max', 'int');
+		$resolver->addAllowedValues(
 			'min',
 			Validation::createIsValidCallable(
-				new Length(['min' => 4, 'max' => PHP_INT_MAX])
+				new Range(['min' => 4, 'max' => PHP_INT_MAX])
 			)
 		);
-		$resolver->setAllowedValues(
+		$resolver->addAllowedValues(
 			'max',
-			function (Options $options): bool {
-				return Validation::createIsValidCallable(
-					new Length(['min' => 4, 'max' => $options['min']])
-				)($options['max']);
-			}
+			Validation::createIsValidCallable(
+				new Range(['min' => 4, 'max' => PHP_INT_MAX])
+			)
 		);
 
 		return $resolver;
