@@ -3,7 +3,6 @@
 namespace iikiti\MfaBundle\Authentication\Voter;
 
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -20,7 +19,6 @@ class MFAVoter extends Voter
 	public const IS_MFA_IN_PROGRESS = 'IS_MFA_IN_PROGRESS';
 
 	public function __construct(
-		private Security $s
 	) {
 	}
 
@@ -68,6 +66,6 @@ class MFAVoter extends Voter
 
 	public function supportsType(string $subjectType): bool
 	{
-		return Request::class == $subjectType;
+		return is_subclass_of($subjectType, Request::class);
 	}
 }
