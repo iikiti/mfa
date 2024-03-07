@@ -25,7 +25,9 @@ class AccessHandlerTest extends TestCase
 		$this->security = $this->createMock(Security::class);
 		$this->router = $this->createMock(RouterInterface::class);
 		$this->router->method('generate')->willReturn($this->redirectTo);
+		$this->router->method('match')->willReturn(['_route' => '']);
 		$this->request = $this->createMock(Request::class);
+		$this->request->method('getPathInfo')->willReturn('');
 		$this->accessDeniedException = $this->createMock(AccessDeniedException::class);
 	}
 
