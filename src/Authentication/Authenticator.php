@@ -18,6 +18,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCre
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
+/**
+ * Authenticates the user against a challenge.
+ */
 class Authenticator extends AbstractAuthenticator
 {
 	public function __construct(

@@ -16,8 +16,14 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 
+/**
+ * Intercepts the token created when the user logs in.
+ */
 class AuthenticationTokenSubscriber implements EventSubscriberInterface
 {
+	/**
+	 * Injects necessary services.
+	 */
 	public function __construct(
 		private EventDispatcherInterface $dispatcher,
 		private ContainerBagInterface $params,
@@ -27,6 +33,12 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	) {
 	}
 
+	/**
+	 * Identifies events that are subscribed to.
+	 *
+	 * Currently: AuthenticationTokenCreatedEvent - This is fired after the user
+	 * logs in and an authentication token is generated.
+	 */
 	public static function getSubscribedEvents(): array
 	{
 		return [
@@ -34,6 +46,13 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		];
 	}
 
+	/**
+	 * When a token is created, this method acquires the preferences for the
+	 * application, site, and user. They are filtered to get the final set of
+	 * preferences and verifies them against the current request. If a
+	 * multi-factor authentication method is required, a new token is created
+	 * as a proxy and placed in front of the existing one.
+	 */
 	public function onGeneralTokenCreated(
 		AuthenticationTokenCreatedEvent $event,
 	): void {
@@ -67,6 +86,10 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		$event->setAuthenticatedToken($mfaToken);
 	}
 
+	/**
+	 * Acquires the application, site, and user preferences via a checked
+	 * configuration service.
+	 */
 	private static function __getConfigurations(
 		iterable $mfaConfigIterator,
 		UserInterface $user,
@@ -93,6 +116,13 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		];
 	}
 
+	/**
+	 * Acquires the configuration service and checks to ensure it came from the
+	 * primary application and not a bundle or extension. This is to prevent
+	 * hijacking of the service. If you want to allow a third-party
+	 * to provide the configuration, use the application configuration service
+	 * as a proxy but be aware that it is a greater security risk.
+	 */
 	private static function __getApplicationConfiguration(
 		iterable $configIterable,
 		string $appNamespace
@@ -114,6 +144,10 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		}
 	}
 
+	/**
+	 * Checks that the current user can use a multi-factor authentication
+	 * service and which one to use.
+	 */
 	private function __checkPreferences(array $application, array $site, array $user): bool
 	{
 		$accessor = PropertyAccess::createPropertyAccessor();
@@ -121,6 +155,9 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 		return false;
 	}
 
+	/**
+	 * Checks the authentication data against the current request.
+	 */
 	private function __checkAuthData(array $authData): void
 	{
 	}

@@ -7,6 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
+/**
+ * Bundle class to handle multi-factor authentication. Loads configuration.
+ */
 class iikitiMultifactorAuthenticationBundle extends AbstractBundle
 {
 	public function configure(DefinitionConfigurator $definition): void

@@ -9,6 +9,9 @@ use OTPHP\TOTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
+ * Totp token strategy that generates, issues and validates the necessary
+ * challenge.
+ *
  * RFC 6238: Time-Based One-Time Password Algorithm (TOTP):
  *     https://datatracker.ietf.org/doc/html/rfc6238
  */

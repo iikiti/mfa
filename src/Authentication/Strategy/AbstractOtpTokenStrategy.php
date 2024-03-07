@@ -6,6 +6,10 @@ use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
 use iikiti\MfaBundle\Authentication\Interface\QrCodeInterface;
 use OTPHP\OTPInterface;
 
+/**
+ * High level function that ensures OTP token strategies implement the necessary
+ * challenge and validation methods.
+ */
 abstract class AbstractOtpTokenStrategy extends AbstractTokenStrategy implements QrCodeInterface
 {
 	/**

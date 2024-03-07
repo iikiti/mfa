@@ -4,6 +4,10 @@ namespace iikiti\MfaBundle\Authentication\Interface;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+/**
+ * Identifies and tags classes that can provide a multi-factor authentication method.
+ * Ensures the required challenge and validation methods are implemented.
+ */
 #[AutoconfigureTag('iikiti_mfa.auth.strategy')]
 interface AuthenticationStrategyInterface
 {
@@ -23,5 +27,5 @@ interface AuthenticationStrategyInterface
 		#[\SensitiveParameter] string $userInput
 	): array;
 
-	public function generateSecret(): null|string;
+	public function generateSecret(): ?string;
 }

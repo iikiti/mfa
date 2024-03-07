@@ -9,6 +9,8 @@ use OTPHP\HOTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
+ * HOTP token strategy class generates and validates the necessary challenge.
+ *
  * RFC 4226: HOTP: An HMAC-Based One-Time Password Algorithm:
  *     https://datatracker.ietf.org/doc/html/rfc4226
  */

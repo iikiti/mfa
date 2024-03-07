@@ -11,6 +11,9 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
+/**
+ * Integer token generator. Generates and validates random integer tokens.
+ */
 class IntegerTokenGenerator extends AbstractSimpleTokenGenerator
 {
 	public function __construct()

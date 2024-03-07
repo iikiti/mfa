@@ -12,6 +12,11 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
+/**
+ * Access handler that checks the current request and if the user needs to or
+ * has already completed a necessary multi-factor challenge. If not, they are
+ * redirected back to the login or throws an exception.
+ */
 class AccessHandler implements AccessDeniedHandlerInterface
 {
 	public function __construct(

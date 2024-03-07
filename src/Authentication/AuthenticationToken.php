@@ -6,6 +6,11 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * This is a proxy token that gets placed in front of the normal login token
+ * in order to prevent the user from being able to access backend services
+ * when they have not yet completed a multi-factor challenge.
+ */
 class AuthenticationToken extends AbstractToken implements TokenInterface
 {
 	/** @psalm-suppress PropertyNotSetInConstructor */

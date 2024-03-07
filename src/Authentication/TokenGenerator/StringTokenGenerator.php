@@ -9,6 +9,10 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
+/**
+ * String token generator. Generates and validates random integer tokens and
+ * returns them as strings.
+ */
 class StringTokenGenerator extends AbstractSimpleTokenGenerator
 {
 	public function __construct()

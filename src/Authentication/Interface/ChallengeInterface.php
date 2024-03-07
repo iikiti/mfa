@@ -3,6 +3,8 @@
 namespace iikiti\MfaBundle\Authentication\Interface;
 
 /**
+ * Ensures challenges have the required methods.
+ *
  * @template T
  */
 interface ChallengeInterface

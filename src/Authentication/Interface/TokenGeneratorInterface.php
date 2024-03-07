@@ -4,6 +4,9 @@ namespace iikiti\MfaBundle\Authentication\Interface;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * Ensures token generators implement the required interfaces.
+ */
 interface TokenGeneratorInterface
 {
 	/**

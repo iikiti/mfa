@@ -5,6 +5,8 @@ namespace iikiti\MfaBundle\Authentication;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
 
 /**
+ * Handles an actually multi-factor challenge.
+ *
  * @template T of mixed
  *
  * @implements ChallengeInterface<T>
