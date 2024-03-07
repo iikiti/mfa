@@ -32,4 +32,6 @@ abstract class AbstractOtpTokenStrategy extends AbstractTokenStrategy implements
 		ChallengeInterface $challenge,
 		#[\SensitiveParameter] string $userInput
 	): array;
+
+	abstract public function generateGetOtp(): OTPInterface;
 }

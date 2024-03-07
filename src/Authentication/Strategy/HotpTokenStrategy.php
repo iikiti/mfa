@@ -6,6 +6,7 @@ use iikiti\MfaBundle\Authentication\Challenge;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
 use OTPHP\HOTP;
 use OTPHP\HOTPInterface;
+use OTPHP\OTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -67,10 +68,15 @@ class HotpTokenStrategy extends AbstractOtpTokenStrategy
 
 	public function generateSecret(): string
 	{
-		return HOTP::generate()->getSecret();
+		return $this->generateGetOtp()->getSecret();
 	}
 
 	public function generateQrCode(): void
 	{
+	}
+
+	public function generateGetOtp(): OTPInterface
+	{
+		return HOTP::generate();
 	}
 }

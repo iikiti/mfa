@@ -4,6 +4,7 @@ namespace iikiti\MfaBundle\Authentication\Strategy;
 
 use iikiti\MfaBundle\Authentication\Challenge;
 use iikiti\MfaBundle\Authentication\Interface\ChallengeInterface;
+use OTPHP\OTPInterface;
 use OTPHP\TOTP;
 use OTPHP\TOTPInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -68,10 +69,15 @@ class TotpTokenStrategy extends AbstractOtpTokenStrategy
 
 	public function generateSecret(): string
 	{
-		return TOTP::generate()->getSecret();
+		return $this->generateGetOtp()->getSecret();
 	}
 
 	public function generateQrCode(): void
 	{
+	}
+
+	public function generateGetOtp(): OTPInterface
+	{
+		return TOTP::generate();
 	}
 }
