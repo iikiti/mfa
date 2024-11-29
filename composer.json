@@ -14,23 +14,23 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "^5.24",
-        "squizlabs/php_codesniffer": "^3.10",
+        "vimeo/psalm": "^5.26",
+        "squizlabs/php_codesniffer": "^3.11",
         "friendsofphp/php-cs-fixer": "*",
-        "psalm/plugin-symfony": "^5.1",
+        "psalm/plugin-symfony": "^5.2",
         "psalm/attributes": "*",
         "symfony/test-pack": "^1.1"
     },
     "require": {
 		"php": "~8.2.0 || ~8.3.0",
-        "symfony/security-bundle": "^7.1",
-        "symfony/routing": "^7.1",
-        "symfony/http-kernel": "^7.1",
-        "symfony/validator": "^7.1",
-        "symfony/options-resolver": "^7.1",
-        "spomky-labs/otphp": "^11.2",
-        "doctrine/persistence": "^3.3",
-        "symfony/property-access": "^7.1"
+        "symfony/security-bundle": "^7.2",
+        "symfony/routing": "^7.2",
+        "symfony/http-kernel": "^7.2",
+        "symfony/validator": "^7.2",
+        "symfony/options-resolver": "^7.2",
+        "spomky-labs/otphp": "^11.3",
+        "doctrine/persistence": "^3.4",
+        "symfony/property-access": "^7.2"
     },
 	"suggest": {
         "ext-sodium": "Base32 encoding at higher performance."
