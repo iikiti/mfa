@@ -5,7 +5,7 @@ namespace iikiti\MfaBundle\Authentication\Event\Subscriber;
 use iikiti\MfaBundle\Authentication\AuthenticationToken;
 use iikiti\MfaBundle\Authentication\Enum\ConfigurationTypeEnum;
 use iikiti\MfaBundle\Authentication\Interface\MfaConfigurationServiceInterface;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,9 +27,9 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	public function __construct(
 		private EventDispatcherInterface $dispatcher,
 		private ContainerBagInterface $params,
-		#[TaggedIterator('mfa.config')]
+		#[AutowireIterator('mfa.config')]
 		private iterable $mfaConfigIterator,
-		private KernelInterface $kernel
+		private KernelInterface $kernel,
 	) {
 	}
 
@@ -93,7 +93,7 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	private static function __getConfigurations(
 		iterable $mfaConfigIterator,
 		UserInterface $user,
-		string $appNamespace
+		string $appNamespace,
 	) {
 		$configService = self::__getApplicationConfiguration(
 			$mfaConfigIterator,
@@ -125,7 +125,7 @@ class AuthenticationTokenSubscriber implements EventSubscriberInterface
 	 */
 	private static function __getApplicationConfiguration(
 		iterable $configIterable,
-		string $appNamespace
+		string $appNamespace,
 	): MfaConfigurationServiceInterface {
 		$total = 0;
 		foreach ($configIterable as $config) {
