@@ -14,7 +14,7 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "^5.26",
+        "vimeo/psalm": "^6.10",
         "squizlabs/php_codesniffer": "^3.11",
         "friendsofphp/php-cs-fixer": "*",
         "psalm/plugin-symfony": "^5.2",
