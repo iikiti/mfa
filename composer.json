@@ -23,14 +23,14 @@
     },
     "require": {
 		"php": ">=8.3",
-        "symfony/security-bundle": "^7.2",
-        "symfony/routing": "^7.2",
-        "symfony/http-kernel": "^7.2",
-        "symfony/validator": "^7.2",
-        "symfony/options-resolver": "^7.2",
+        "symfony/security-bundle": "^7.3",
+        "symfony/routing": "^7.3",
+        "symfony/http-kernel": "^7.3",
+        "symfony/validator": "^7.3",
+        "symfony/options-resolver": "^7.3",
         "spomky-labs/otphp": "^11.3",
         "doctrine/persistence": "^3.4",
-        "symfony/property-access": "^7.2"
+        "symfony/property-access": "^7.3"
     },
 	"suggest": {
         "ext-sodium": "Base32 encoding at higher performance."
