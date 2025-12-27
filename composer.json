@@ -29,7 +29,7 @@
         "symfony/validator": "^8.0",
         "symfony/options-resolver": "^8.0",
         "spomky-labs/otphp": "^11.3",
-        "doctrine/persistence": "^3.4",
+        "doctrine/persistence": "^4.1",
         "symfony/property-access": "^8.0"
     },
 	"suggest": {
